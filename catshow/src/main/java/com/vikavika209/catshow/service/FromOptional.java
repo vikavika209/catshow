@@ -27,7 +27,7 @@ public class FromOptional {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T objectFromOptional(Class<T> type, long id) {
+    public <T> T objectFromOptional(Class<T> type, long id) throws CatNotFoundException, OwnerNotFoundException, ShowNotFoundException {
         if (type == Cat.class) {
             return (T) catRepository.findById(id)
                     .orElseThrow(() -> new CatNotFoundException("Cat not found with id: " + id));

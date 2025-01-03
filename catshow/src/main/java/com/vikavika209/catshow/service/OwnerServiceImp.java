@@ -13,7 +13,7 @@ import java.util.Optional;
 public class OwnerServiceImp implements OwnerService{
 
     private final PasswordEncoder passwordEncoder;
-    private OwnerRepository ownerRepository;
+    private final OwnerRepository ownerRepository;
 
     @Autowired
     public OwnerServiceImp(PasswordEncoder passwordEncoder, OwnerRepository ownerRepository) {
@@ -30,12 +30,12 @@ public class OwnerServiceImp implements OwnerService{
     }
 
     @Override
-    public Owner getOwner(long id) {
+    public Owner getOwner(long id) throws OwnerNotFoundException {
         return ownerFromOptional(id);
     }
 
     @Override
-    public Owner updateOwner(long id, String name, String email, String password, String city) {
+    public Owner updateOwner(long id, String name, String email, String password, String city) throws OwnerNotFoundException {
         Owner owner = ownerFromOptional(id);
         owner.setName(name);
         owner.setEmail(email);
@@ -49,7 +49,7 @@ public class OwnerServiceImp implements OwnerService{
         ownerRepository.deleteById(id);
     }
 
-    private Owner ownerFromOptional(long id){
+    private Owner ownerFromOptional(long id) throws OwnerNotFoundException {
         Optional<Owner> optionalOwner = ownerRepository.findById(id);
         return optionalOwner.orElseThrow(() -> new OwnerNotFoundException("Owner not found with id: " + id));
     }

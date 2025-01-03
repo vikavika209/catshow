@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -22,10 +23,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .anyRequest().permitAll()
+                .requestMatchers("/**").permitAll()
                 .and()
                 .formLogin().disable()
-                .httpBasic().disable();
+                .httpBasic().disable()
+                .csrf().disable();
 
         return http.build();
     }

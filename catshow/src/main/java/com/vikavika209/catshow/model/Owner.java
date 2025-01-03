@@ -1,8 +1,9 @@
 package com.vikavika209.catshow.model;
 
-import com.vikavika209.catshow.security.SecurityConfig;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,16 +22,21 @@ public class Owner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Email(message = "Email must be valid")
+    @NotBlank(message = "Пожалуйста, введите ваш email")
+    @Email(message = "Неверный формат email")
     @Column(nullable = false, unique = true)
     private String email;
 
     @Transient
+    @NotBlank(message = "Пожалуйста, введите пароль")
+    @Size(min = 6, message = "Пароль должен содержать минимум 6 символов")
     private String password;
 
+    @NotBlank(message = "Пожалуйста, введите ваше имя")
     @Column(nullable = false)
     private String name;
 
+    @NotBlank(message = "Пожалуйста, введите ваш город")
     @Column(nullable = false)
     private String city;
 

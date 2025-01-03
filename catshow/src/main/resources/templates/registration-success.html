@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация нового пользователя</title>
+    <title>Успешная регистрация</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,25 +34,10 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-size: 1.1em;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            font-size: 1.1em;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .success-message {
+            font-size: 1.5em;
             margin-bottom: 20px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus {
-            border-color: #ff7f00;
+            color: #ff7f00;;
         }
 
         .paw-button {
@@ -99,43 +84,17 @@
         .paw-button:hover::before, .paw-button:hover::after {
             background-color: #e06b00;
         }
-
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-            margin-top: -10px;
-        }
     </style>
 </head>
 <body>
 <header>
-    <h1>Регистрация нового пользователя</h1>
+    <h1>Успешная регистрация</h1>
 </header>
 
 <div class="form-container">
-    <form action="/submit_registration" method="POST" th:object="${owner}">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required  placeholder="Введите ваш email" th:field="*{email}">
-        <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+    <p class="success-message">Поздравляем! Вы успешно зарегистрировались.</p>
 
-        <label for="password">Пароль:</label>
-        <input type="password" id="password" name="password" required placeholder="Введите пароль" th:field="*{password}">
-        <div class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-
-        <label for="name">Имя:</label>
-        <input type="text" id="name" name="name" required placeholder="Введите ваше имя" th:field="*{name}">
-        <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-
-        <label for="city">Город:</label>
-        <input type="text" id="city" name="city" required placeholder="Введите ваш город" th:field="*{city}">
-        <div class="error-message" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
-
-        <button type="submit" class="paw-button">Зарегистрироваться</button>
-
-        <div th:if="${error}" style="color: red;">
-            <p th:text="${error}"></p>
-        </div>
-    </form>
+    <a href="/" class="paw-button">Перейти на главную</a>
 </div>
 
 </body>
