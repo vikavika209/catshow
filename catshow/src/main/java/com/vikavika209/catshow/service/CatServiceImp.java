@@ -6,12 +6,16 @@ import com.vikavika209.catshow.exception.ShowNotFoundException;
 import com.vikavika209.catshow.model.Breed;
 import com.vikavika209.catshow.model.Cat;
 import com.vikavika209.catshow.model.Owner;
+import com.vikavika209.catshow.model.Show;
 import com.vikavika209.catshow.repository.CatRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -41,7 +45,8 @@ public class CatServiceImp implements CatService{
     public Cat createCat(String name, Breed breed, long ownerId) throws OwnerNotFoundException {
         Owner owner = ownerService.getOwner(ownerId);
         Cat cat = new Cat(name, breed, owner);
-        showService.addCatsToShowsByCity(cat);
+        catRepository.save(cat);
+        showService.addPotentialCatsToShowsByCity(cat);
         logger.info("New cat with name {} created", name);
         return cat;
     }
@@ -56,6 +61,12 @@ public class CatServiceImp implements CatService{
             logError("getCatById", id, e);
             throw e;
         }
+    }
+
+    @Transactional
+    @Override
+    public List<Cat> getAllCats() {
+        return catRepository.findAll();
     }
 
     @Transactional
@@ -84,5 +95,17 @@ public class CatServiceImp implements CatService{
         }
         catRepository.deleteById(id);
         logger.info("Cat with id {} has been deleted", id);
+    }
+
+    @Override
+    public void deleteAll() {
+        catRepository.deleteAll();
+    }
+
+    @Transactional
+    @Override
+    public Set<Show> getShowByCatId(long id) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException {
+        Cat cat = fromOptional.objectFromOptional(Cat.class, id);
+        return cat.getParticipatedShows();
     }
 }

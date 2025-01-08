@@ -1,22 +1,16 @@
 package com.vikavika209.catshow.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@NoArgsConstructor
-@Getter
-@Setter
 @Component
 public class Show {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "show_seq")
+    @SequenceGenerator(name = "show_seq", sequenceName = "show_seq", allocationSize = 1)
     private long id;
 
     @Column(nullable = false)
@@ -34,29 +28,70 @@ public class Show {
             joinColumns = @JoinColumn(name = "show_id"),
             inverseJoinColumns = @JoinColumn(name = "cat_id")
     )
-    private List<Cat> cats;
+    private Set<Cat> potentialParticipants;
 
-    public Show(String city, Date date, String address, List<Cat> cats) {
-        this.city = city;
-        this.date = date;
-        this.address = address;
-        this.cats = cats;
+    @ManyToMany
+    private Set<Cat> participants;
+
+    public Show() {
     }
 
-    public Show(String city, String address, Date date) {
+    public Show(String city, Date date, String address) {
         this.city = city;
-        this.address = address;
         this.date = date;
+        this.address = address;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Set<Cat> getPotentialParticipants() {
+        return potentialParticipants;
+    }
+
+    public void setPotentialParticipants(Set<Cat> potentialParticipants) {
+        this.potentialParticipants = potentialParticipants;
+    }
+
+    public Set<Cat> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<Cat> participants) {
+        this.participants = participants;
     }
 
     @Override
     public String toString() {
-        return "Shows{" +
-                "id=" + id +
-                ", city='" + city + '\'' +
+        return "Show{" +
+                "city='" + city + '\'' +
                 ", date=" + date +
                 ", address='" + address + '\'' +
-                ", cats=" + cats +
                 '}';
     }
 }

@@ -1,10 +1,11 @@
 package com.vikavika209.catshow.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -29,6 +30,12 @@ public class Cat {
     @ManyToOne
     @JoinColumn
     private Owner owner;
+
+    @ManyToMany(mappedBy = "potentialParticipants")
+    private Set<Show> potentialShows;
+
+    @ManyToMany(mappedBy = "participants")
+    private Set<Show> participatedShows;
 
     public Cat(String name, Owner owner, int score, Breed breed) {
         this.name = name;
