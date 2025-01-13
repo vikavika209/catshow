@@ -118,7 +118,7 @@ public class OwnerServiceImp implements OwnerService{
                 .orElseThrow(() -> new OwnerNotFoundException("Пользователь с email: " + email + " не найден"));
 
         logger.info("The owner has been found with email: {}", email);
-        logger.info("The password for the owner is '{}'", password);
+        logger.info("The password for the owner is '{}'", owner.getPassword());
 
         if (!passwordEncoder.matches(password, owner.getPassword())) {
             throw new OwnerNotFoundException("Неверный пароль для email: " + email);

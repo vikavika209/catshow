@@ -1,9 +1,11 @@
 package com.vikavika209.catshow;
 
+import com.vikavika209.catshow.exception.OwnerNotFoundException;
 import com.vikavika209.catshow.model.Cat;
 import com.vikavika209.catshow.model.Owner;
 import com.vikavika209.catshow.model.Show;
 import com.vikavika209.catshow.repository.CatRepository;
+import com.vikavika209.catshow.repository.OwnerRepository;
 import com.vikavika209.catshow.repository.ShowRepository;
 import com.vikavika209.catshow.service.CatService;
 import com.vikavika209.catshow.service.OwnerService;
@@ -18,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 
 import static com.vikavika209.catshow.model.Breed.*;
 
@@ -27,12 +30,14 @@ public class CatShowApplication {
     private final OwnerService ownerService;
 	private final CatService catService;
 	private final ShowService showService;
+	private final OwnerRepository ownerRepository;
 
     @Autowired
-	public CatShowApplication(OwnerService ownerService, CatService catService, ShowService showService) {
+	public CatShowApplication(OwnerService ownerService, CatService catService, ShowService showService, OwnerRepository ownerRepository) {
         this.ownerService = ownerService;
         this.catService = catService;
         this.showService = showService;
+        this.ownerRepository = ownerRepository;
     }
 
     public static void main(String[] args) {
@@ -40,7 +45,7 @@ public class CatShowApplication {
 	}
 
 	@Bean
-	public CommandLineRunner run(OwnerService ownerService, CatService catService, ShowService showService) {
+	public CommandLineRunner run(OwnerService ownerService, CatService catService, ShowService showService, OwnerRepository ownerRepository) {
 		return args -> {
 			showService.deleteAll();
 			catService.deleteAll();
@@ -54,6 +59,7 @@ public class CatShowApplication {
 			Owner petr = ownerService.createOwner("Петр", "petr@test.com", "123456", "Екатеринбург");
 			Cat cat1 = catService.createCat("Барсик", SPHYNX, ivan.getId());
 			Cat cat2 = catService.createCat("Чёрт", MAINECOON, petr.getId());
+			Cat cat3 = catService.createCat("Эдуард", MAINECOON, ivan.getId());
 
 			showService.addParticipant(cat1.getId(), show1.getId());
 			showService.addParticipant(cat1.getId(), show2.getId());

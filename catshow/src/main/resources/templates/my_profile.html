@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои выставки</title>
+    <title>Профиль владельца</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,6 +35,22 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
+        .paw-button {
+            display: inline-block;
+            background-color: #ff7f00;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+            padding: 15px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.3s;
+            position: relative;
+        }
+
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -56,74 +72,34 @@
         tr:hover {
             background-color: #f9f9f9;
         }
-
-        .paw-button {
-            display: inline-block;
-            background-color: #ff7f00;
-            color: white;
-            text-decoration: none;
-            font-size: 1.2em;
-            padding: 15px 20px;
-            margin: 10px;
-            border: none;
-            border-radius: 50%;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, background-color 0.3s;
-        }
-
-        .paw-button:hover {
-            background-color: #e06b00;
-            transform: scale(1.1);
-        }
-
-        .paw-button::before, .paw-button::after {
-            content: '';
-            position: absolute;
-            background-color: #ff7f00;
-            border-radius: 50%;
-            transition: background-color 0.3s;
-        }
-
-        .paw-button::before {
-            width: 20px;
-            height: 20px;
-            top: -10px;
-            left: 10px;
-        }
-
-        .paw-button::after {
-            width: 20px;
-            height: 20px;
-            top: -10px;
-            right: 10px;
-        }
-
-        .paw-button:hover::before, .paw-button:hover::after {
-            background-color: #e06b00;
-        }
     </style>
 </head>
 <body>
 <header>
-    <h1>Мои выставки</h1>
+    <h1>Профиль владельца</h1>
 </header>
 
 <div class="table-container">
-    <h2>Список выставок</h2>
+    <h2>Мои данные</h2>
     <table>
         <thead>
         <tr>
-            <th>Дата</th>
+            <th>ID</th>
+            <th>Имя</th>
             <th>Город</th>
-            <th>Адрес</th>
+            <th>Электронная почта</th>
+            <th>Список кошек</th>
+            <th>Баланс</th>
         </tr>
         </thead>
         <tbody>
-
-        <tr th:each="show : ${shows}">
-            <td th:text="${show.date}">Дата</td>
-            <td th:text="${show.city}">Город</td>
-            <td th:text="${show.address}">Адрес</td>
+        <tr>
+            <td th:text="${owner.id}"></td>
+            <td th:text="${owner.name}"></td>
+            <td th:text="${owner.city}"></td>
+            <td th:text="${owner.email}"></td>
+            <td th:text="${catNames}"></td>
+            <td th:text="${owner.balance}"></td>
         </tr>
         </tbody>
     </table>

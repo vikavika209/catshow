@@ -27,9 +27,9 @@ public class Owner {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Transient
     @NotBlank(message = "Пожалуйста, введите пароль")
     @Size(min = 6, message = "Пароль должен содержать минимум 6 символов")
+    @Column
     private String password;
 
     @NotBlank(message = "Пожалуйста, введите ваше имя")
@@ -74,6 +74,7 @@ public class Owner {
         return "Owner{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", city='" + city + '\'' +
                 ", balance=" + balance +
