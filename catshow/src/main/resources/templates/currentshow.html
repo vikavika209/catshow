@@ -32,7 +32,7 @@
             background-color: #f4f4f4;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
+            overflow-x: visible;;
         }
 
         table {
@@ -137,7 +137,9 @@
             </td>
             <td>
                 <form th:action="@{/add_pet_to_show}" method="POST" class="cat-form">
-                    <input type="number" name="catId" placeholder="ID питомца" required />
+                    <label>
+                        <input type="number" name="catId" placeholder="ID питомца" required />
+                    </label>
                     <input type="hidden" name="showId" th:value="${show.id}" />
                     <button type="submit">Добавить моего питомца</button>
                 </form>
@@ -146,6 +148,8 @@
         </tbody>
     </table>
 </div>
+
+<a href="/" class="paw-button">На главную</a>
 
 </body>
 </html>

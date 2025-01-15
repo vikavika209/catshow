@@ -60,10 +60,13 @@ public class CatShowApplication {
 			Cat cat1 = catService.createCat("Барсик", SPHYNX, ivan.getId());
 			Cat cat2 = catService.createCat("Чёрт", MAINECOON, petr.getId());
 			Cat cat3 = catService.createCat("Эдуард", MAINECOON, ivan.getId());
+			Cat cat4 = catService.createCat("Дикий", SIAMESE, petr.getId());
 
 			showService.addParticipant(cat1.getId(), show1.getId());
 			showService.addParticipant(cat1.getId(), show2.getId());
 			showService.addParticipant(cat2.getId(), show2.getId());
+
+			catService.allCats().forEach(cat -> System.out.println(cat.getId()));
 		};
 	}
 }

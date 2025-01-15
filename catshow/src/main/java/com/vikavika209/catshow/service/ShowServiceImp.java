@@ -90,6 +90,9 @@ public class ShowServiceImp implements ShowService{
         Cat cat = fromOptional.objectFromOptional(Cat.class, catId);
         Show show = fromOptional.objectFromOptional(Show.class, showId);
         show.getParticipants().add(cat);
+
+        Set<Cat> potentialParticipants = show.getPotentialParticipants();
+        potentialParticipants.remove(cat);
     }
 
     @Transactional

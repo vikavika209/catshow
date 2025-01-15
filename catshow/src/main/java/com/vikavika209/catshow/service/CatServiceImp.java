@@ -108,4 +108,9 @@ public class CatServiceImp implements CatService{
         Cat cat = fromOptional.objectFromOptional(Cat.class, id);
         return cat.getParticipatedShows();
     }
+
+    @Override
+    public List<Cat> allCats() {
+        return catRepository.findAll();
+    }
 }

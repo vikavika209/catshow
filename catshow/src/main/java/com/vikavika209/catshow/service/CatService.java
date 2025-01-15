@@ -20,4 +20,5 @@ public interface CatService {
     void deleteCat(long id) throws CatNotFoundException;
     void deleteAll();
     Set<Show> getShowByCatId(long id) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException;
+    List<Cat> allCats();
 }
