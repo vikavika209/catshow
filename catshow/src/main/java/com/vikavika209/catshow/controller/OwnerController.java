@@ -6,7 +6,6 @@ import com.vikavika209.catshow.exception.ShowNotFoundException;
 import com.vikavika209.catshow.model.Cat;
 import com.vikavika209.catshow.model.Owner;
 import com.vikavika209.catshow.model.Show;
-import com.vikavika209.catshow.service.CatService;
 import com.vikavika209.catshow.service.OwnerService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -23,14 +22,12 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/")
 public class OwnerController {
-    private final CatService catService;
-    private OwnerService ownerService;
+    private final OwnerService ownerService;
     private static final Logger logger = LoggerFactory.getLogger(OwnerController.class);
 
     @Autowired
-    public OwnerController(OwnerService ownerService, CatService catService) {
+    public OwnerController(OwnerService ownerService) {
         this.ownerService = ownerService;
-        this.catService = catService;
     }
 
     @GetMapping("/registration")
