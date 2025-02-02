@@ -67,6 +67,7 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
         roles.add(Role.USER);
         owner.setRoles(roles);
         ownerRepository.save(owner);
+        logger.info("Метод createOwner от OwnerServiceImp. Пользователь с логином: {} успешно создан", owner.getEmail());
         return owner;
     }
 
@@ -167,15 +168,26 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
 
     @Override
     public Owner getCurrentOwner() throws OwnerNotFoundException {
+        logger.info("Метод getCurrentOwner начал работу");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            throw new OwnerNotFoundException("Ошибка при получении текущего пользователя");
+        if (authentication == null || !authentication.isAuthenticated()) {
+            logger.error("Ошибка при попытке аутентификации");
+            throw new OwnerNotFoundException("Пользователь не найден или не аутентифицирован");
         }
+
         Object principal = authentication.getPrincipal();
-        if (principal instanceof Owner) {
-            return (Owner) principal;
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
         } else {
-            throw new OwnerNotFoundException("Текущий пользователь не является владельцем");
+            username = principal.toString();
         }
+
+        Owner owner = ownerRepository.findByEmail(username)
+                .orElseThrow(() -> new OwnerNotFoundException("Владелец с таким именем не найден"));
+
+        logger.info("Пользователь успешно аутентифицирован, логин: {}", username);
+
+        return owner;
     }
 }

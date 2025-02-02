@@ -1,6 +1,5 @@
 package com.vikavika209.catshow.config;
 
-import com.vikavika209.catshow.filter.JwtAuthenticationFilter;
 import com.vikavika209.catshow.service.OwnerService;
 import com.vikavika209.catshow.service.OwnerServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,16 +41,22 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   JwtAuthenticationFilter jwtAuthenticationFilter,
+                                                   //JwtAuthenticationFilter jwtAuthenticationFilter,
                                                    OwnerServiceImp ownerServiceImp) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/enter", "/submit_login", "/registration").permitAll()
+                        .requestMatchers("/enter", "/submit_login", "/registration", "/submit_registration").permitAll()
                         .anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                //.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin(form -> form
+                        .loginPage("/enter")
+                        .loginProcessingUrl("/submit_login")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/enter?error=true")
+                )
                 .userDetailsService(ownerServiceImp);
 
         return http.build();

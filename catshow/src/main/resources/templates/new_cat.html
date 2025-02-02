@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить кота</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #ff7f00;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            padding: 20px;
+            background-color: #ff7f00;
+            color: white;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .form-container {
+            margin-top: 30px;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        label {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .paw-button {
+            display: inline-block;
+            background-color: #ff7f00;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .paw-button:hover {
+            background-color: #e06b00;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Добавить кота</h1>
+</header>
+
+<div class="form-container">
+    <form th:action="@{/addCat}" method="post">
+        <input type="hidden" name="ownerId" th:value="${currentOwner.id}"/>
+
+        <label for="name">Имя кота:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="breed">Порода:</label>
+        <select id="breed" name="breed" required>
+            <option th:each="breed : ${T(com.vikavika209.catshow.model.Breed).values()}"
+                    th:value="${breed}" th:text="${breed.getDisplayName()}"></option>
+        </select>
+
+        <div class="button-container">
+            <button type="submit" class="paw-button">Добавить</button>
+        </div>
+    </form>
+</div>
+
+<div class="button-container">
+    <a th:href="@{/}" class="paw-button">На главную</a>
+</div>
+
+</body>
+</html>

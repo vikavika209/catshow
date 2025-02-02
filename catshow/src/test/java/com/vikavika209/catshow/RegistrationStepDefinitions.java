@@ -1,6 +1,7 @@
 package com.vikavika209.catshow;
 
 import com.vikavika209.catshow.controller.OwnerController;
+import com.vikavika209.catshow.service.CatService;
 import com.vikavika209.catshow.service.OwnerService;
 import com.vikavika209.catshow.utils.JwtUtil;
 import io.cucumber.java.en.Given;
@@ -22,6 +23,7 @@ public class RegistrationStepDefinitions {
 
     private MockMvc mockMvc;
     OwnerService ownerService;
+    CatService catService;
     JwtUtil jwtUtil;
     private MvcResult mvcResult;
 
@@ -37,8 +39,9 @@ public class RegistrationStepDefinitions {
     @Given("происходит ошибка при сохранении пользователя")
     public void errorOccursWhileUserSaving() throws Exception {
         ownerService = Mockito.mock(OwnerService.class);
+        catService = Mockito.mock(CatService.class);
         jwtUtil = Mockito.mock(JwtUtil.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService, jwtUtil)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService, catService, jwtUtil)).build();
 
         doThrow(new RuntimeException("Ошибка базы данных"))
                 .when(this.ownerService).createOwner(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
@@ -47,8 +50,9 @@ public class RegistrationStepDefinitions {
     @When("пользователь отправляет форму регистрации")
     public void userSendRegistrationForm() throws Exception {
         ownerService = Mockito.mock(OwnerService.class);
+        catService = Mockito.mock(CatService.class);
         jwtUtil = Mockito.mock(JwtUtil.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService, jwtUtil)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService, catService, jwtUtil)).build();
 
         mvcResult = mockMvc.perform(post("/submit_registration")
                         .param("name", "Test User")
@@ -70,8 +74,9 @@ public class RegistrationStepDefinitions {
     @Then("пользователь остаётся на странице регистрации")
     public void userOnTheRegistrationPage() throws Exception {
         ownerService = Mockito.mock(OwnerService.class);
+        catService = Mockito.mock(CatService.class);
         jwtUtil = Mockito.mock(JwtUtil.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService, jwtUtil)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService, catService, jwtUtil)).build();
 
         mvcResult = this.mockMvc.perform(post("/submit_registration"))
                         .andReturn();

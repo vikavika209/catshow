@@ -8,7 +8,6 @@ import lombok.Setter;
 import java.util.Set;
 
 @Entity
-@NoArgsConstructor
 @Getter
 @Setter
 public class Cat {
@@ -48,6 +47,9 @@ public class Cat {
         this.name = name;
         this.breed = breed;
         this.owner = owner;
+    }
+
+    public Cat() {
     }
 
     @Override

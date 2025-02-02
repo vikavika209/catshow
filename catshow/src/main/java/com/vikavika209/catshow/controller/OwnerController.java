@@ -3,9 +3,11 @@ package com.vikavika209.catshow.controller;
 import com.vikavika209.catshow.exception.CatNotFoundException;
 import com.vikavika209.catshow.exception.OwnerNotFoundException;
 import com.vikavika209.catshow.exception.ShowNotFoundException;
+import com.vikavika209.catshow.model.Breed;
 import com.vikavika209.catshow.model.Cat;
 import com.vikavika209.catshow.model.Owner;
 import com.vikavika209.catshow.model.Show;
+import com.vikavika209.catshow.service.CatService;
 import com.vikavika209.catshow.service.OwnerService;
 import com.vikavika209.catshow.utils.JwtUtil;
 import jakarta.validation.Valid;
@@ -25,12 +27,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/")
 public class OwnerController {
     private final OwnerService ownerService;
+    private final CatService catService;
     private JwtUtil jwtUtil;
     private static final Logger logger = LoggerFactory.getLogger(OwnerController.class);
 
     @Autowired
-    public OwnerController(OwnerService ownerService, JwtUtil jwtUtil) {
+    public OwnerController(OwnerService ownerService, CatService catService, JwtUtil jwtUtil) {
         this.ownerService = ownerService;
+        this.catService = catService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -42,11 +46,12 @@ public class OwnerController {
 
     @PostMapping("/submit_registration")
     public String registerOwner(
-            @Valid @ModelAttribute Owner owner,
+            @ModelAttribute("owner") @Valid Owner owner,
             BindingResult result,
             Model model
     ) {
         if (result.hasErrors()) {
+            logger.info("Ошибка при регистрации пользователя в OwnerController классе");
             return "registration";
         }
 
@@ -61,11 +66,11 @@ public class OwnerController {
         }
     }
 
-    @GetMapping("/my_show/{id}")
-    public String getOwnerShows(@PathVariable("id") long ownerId, Model model) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException {
-        Set<Show> shows = ownerService.getAllShowsByOwnerId(ownerId);
+    @GetMapping("/my_show")
+    public String getOwnerShows(Model model) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException {
+        Owner owner = ownerService.getCurrentOwner();
+        Set<Show> shows = ownerService.getAllShowsByOwnerId(owner.getId());
         model.addAttribute("shows", shows);
-        model.addAttribute("ownerId", ownerId);
         return "my_show";
     }
 
@@ -83,26 +88,30 @@ public class OwnerController {
         return "my_profile";
     }
 
-    @GetMapping("/my_pet/{id}")
-    public String getCatsByOwnerId(@PathVariable ("id") long ownerId, Model model) throws CatNotFoundException, OwnerNotFoundException {
-
-        Owner owner = ownerService.getOwner(ownerId);
-        Set<Cat> cats = ownerService.getCatsOfTheOwnerById(ownerId);
+    @GetMapping("/my_pets")
+    public String getCatsByOwnerId(Model model) throws CatNotFoundException, OwnerNotFoundException {
+        Owner owner = ownerService.getCurrentOwner();
+        Set<Cat> cats = ownerService.getCatsOfTheOwnerById(owner.getId());
 
         model.addAttribute("cats", cats);
-        model.addAttribute("ownerId", ownerId);
 
         return "my_pets";
     }
 
-    @GetMapping("/owner/home/{id}")
-    public String getHomePage(@PathVariable("id") long ownerId, Model model) throws OwnerNotFoundException {
-
-        Owner owner = ownerService.getOwner(ownerId);
-
-        model.addAttribute("ownerId", ownerId);
-
-        return "home_page";
+    @GetMapping ("/new_cat")
+    public String addCatToTheOwner(Model model) throws OwnerNotFoundException {
+        Owner owner = ownerService.getCurrentOwner();
+        model.addAttribute("currentOwner", owner);
+        model.addAttribute("cat", new Cat());
+        return "new_cat";
     }
 
+    @PostMapping("/addCat")
+    public String addCat(@RequestParam("name") String name,
+                         @RequestParam("breed") Breed breed,
+                         @RequestParam("ownerId") long ownerId) throws OwnerNotFoundException {
+
+        catService.createCat(name, breed, ownerId);
+        return "redirect:/my_pets";
+    }
 }

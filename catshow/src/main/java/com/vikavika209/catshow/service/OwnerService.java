@@ -21,7 +21,6 @@ public interface OwnerService {
     Set<Show> getAllShowsByOwnerId(long id) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException;
     Owner updateOwner(long id, String name, String email, String password, String city) throws OwnerNotFoundException;
     void deleteOwner(long id);
-    //Owner verifyOwner(String email, String password) throws OwnerNotFoundException;
     void deleteAll();
     UserDetails loadUserByUsername(String username);
     Owner getCurrentOwner() throws OwnerNotFoundException;
