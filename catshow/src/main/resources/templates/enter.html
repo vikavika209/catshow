@@ -55,26 +55,33 @@
             border-color: #ff7f00;
         }
 
-        .paw-button {
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .paw-button, .register-button {
             display: inline-block;
             background-color: #ff7f00;
             color: white;
             text-decoration: none;
             font-size: 1.2em;
             padding: 15px 20px;
-            margin: 10px;
             border: none;
             border-radius: 50%;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s, background-color 0.3s;
+            position: relative;
         }
 
-        .paw-button:hover {
+        .paw-button:hover, .register-button:hover {
             background-color: #e06b00;
             transform: scale(1.1);
         }
 
-        .paw-button::before, .paw-button::after {
+        .paw-button::before, .paw-button::after,
+        .register-button::before, .register-button::after {
             content: '';
             position: absolute;
             background-color: #ff7f00;
@@ -82,23 +89,34 @@
             transition: background-color 0.3s;
         }
 
-        .paw-button::before {
+        .paw-button::before, .register-button::before {
             width: 20px;
             height: 20px;
             top: -10px;
             left: 10px;
         }
 
-        .paw-button::after {
+        .paw-button::after, .register-button::after {
             width: 20px;
             height: 20px;
             top: -10px;
             right: 10px;
         }
 
-        .paw-button:hover::before, .paw-button:hover::after {
+        .paw-button:hover::before, .paw-button:hover::after,
+        .register-button:hover::before, .register-button:hover::after {
             background-color: #e06b00;
         }
+
+        /* Кнопка Регистрация будет того же цвета, что и кнопка Войти */
+        .register-button {
+            background-color: #ff7f00;
+        }
+
+        .register-button:hover {
+            background-color: #e06b00;
+        }
+
     </style>
 </head>
 <body>
@@ -109,18 +127,20 @@
 <div class="form-container">
     <form action="/submit_login" method="POST">
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required placeholder="Введите ваш email">
+        <input type="email" id="email" name="username" required placeholder="Введите ваш email">
 
         <label for="password">Пароль:</label>
         <input type="password" id="password" name="password" required placeholder="Введите пароль">
 
-        <button type="submit" class="paw-button">Войти</button>
+        <div class="button-container">
+            <button type="submit" class="paw-button">Войти</button>
+            <a href="/registration" class="register-button">Регистрация</a>
+        </div>
     </form>
 
     <div th:if="${error}" class="error-message">
         <p th:text="${error}"></p>
     </div>
-
 </div>
 
 </body>

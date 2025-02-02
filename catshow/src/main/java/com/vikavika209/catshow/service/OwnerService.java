@@ -6,6 +6,7 @@ import com.vikavika209.catshow.exception.ShowNotFoundException;
 import com.vikavika209.catshow.model.Cat;
 import com.vikavika209.catshow.model.Owner;
 import com.vikavika209.catshow.model.Show;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public interface OwnerService {
     Set<Show> getAllShowsByOwnerId(long id) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException;
     Owner updateOwner(long id, String name, String email, String password, String city) throws OwnerNotFoundException;
     void deleteOwner(long id);
-    Owner verifyOwner(String email, String password) throws OwnerNotFoundException;
+    //Owner verifyOwner(String email, String password) throws OwnerNotFoundException;
     void deleteAll();
+    UserDetails loadUserByUsername(String username);
+    Owner getCurrentOwner() throws OwnerNotFoundException;
 }

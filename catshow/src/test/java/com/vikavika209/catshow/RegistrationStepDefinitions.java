@@ -1,28 +1,20 @@
 package com.vikavika209.catshow;
 
-import ch.qos.logback.core.Appender;
 import com.vikavika209.catshow.controller.OwnerController;
 import com.vikavika209.catshow.service.OwnerService;
-import io.cucumber.java.en.And;
+import com.vikavika209.catshow.utils.JwtUtil;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.github.nalbion.TestAppender;
 import org.junit.jupiter.api.Assertions;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.ui.Model;
-
 
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -30,6 +22,7 @@ public class RegistrationStepDefinitions {
 
     private MockMvc mockMvc;
     OwnerService ownerService;
+    JwtUtil jwtUtil;
     private MvcResult mvcResult;
 
     @Given("пользователь заполнил форму регистрации с валидными данными")
@@ -44,7 +37,8 @@ public class RegistrationStepDefinitions {
     @Given("происходит ошибка при сохранении пользователя")
     public void errorOccursWhileUserSaving() throws Exception {
         ownerService = Mockito.mock(OwnerService.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService)).build();
+        jwtUtil = Mockito.mock(JwtUtil.class);
+        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService, jwtUtil)).build();
 
         doThrow(new RuntimeException("Ошибка базы данных"))
                 .when(this.ownerService).createOwner(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
@@ -53,7 +47,8 @@ public class RegistrationStepDefinitions {
     @When("пользователь отправляет форму регистрации")
     public void userSendRegistrationForm() throws Exception {
         ownerService = Mockito.mock(OwnerService.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService)).build();
+        jwtUtil = Mockito.mock(JwtUtil.class);
+        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService, jwtUtil)).build();
 
         mvcResult = mockMvc.perform(post("/submit_registration")
                         .param("name", "Test User")
@@ -75,7 +70,8 @@ public class RegistrationStepDefinitions {
     @Then("пользователь остаётся на странице регистрации")
     public void userOnTheRegistrationPage() throws Exception {
         ownerService = Mockito.mock(OwnerService.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService)).build();
+        jwtUtil = Mockito.mock(JwtUtil.class);
+        mockMvc = MockMvcBuilders.standaloneSetup(new OwnerController(ownerService, jwtUtil)).build();
 
         mvcResult = this.mockMvc.perform(post("/submit_registration"))
                         .andReturn();
