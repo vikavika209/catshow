@@ -3,6 +3,7 @@
 
     <root level="DEBUG">
         <appender-ref ref="FILE"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -11,29 +12,23 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/application.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/application-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
+        <append>false</append>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/errors.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/errors-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>60</maxHistory>
-        </rollingPolicy>
+        <append>false</append>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="ERROR_LOGGER" level="ERROR" additivity="true">
+    <logger name="ERROR_LOGGER" level="ERROR" additivity="false">
         <appender-ref ref="ERROR_FILE"/>
     </logger>
 

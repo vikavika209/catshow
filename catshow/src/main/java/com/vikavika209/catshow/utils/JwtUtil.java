@@ -7,7 +7,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -27,11 +26,13 @@ public class JwtUtil {
     }
 
     public String generateToken(Owner owner) {
+        List<String> roles = owner.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
         return Jwts.builder()
-                .subject(owner.getEmail())
-                .claim("roles", owner.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList()))
+                .subject(owner.getUsername())
+                .claim("roles", roles)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + accessExpiredTime))
                 .signWith(getSigningKey())

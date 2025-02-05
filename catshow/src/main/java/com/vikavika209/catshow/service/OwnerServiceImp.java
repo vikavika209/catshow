@@ -53,7 +53,7 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
     @Transactional
     @Override
     public Owner createOwner(String name, String email, String rawPassword, String city) {
-        if (ownerRepository.existsByEmail(email)){
+        if (ownerRepository.existsByUsername(email)){
             throw new EmailAlreadyExistsException("Пользователь с email: " + email + " уже существует");
         }
 
@@ -67,7 +67,7 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
         roles.add(Role.USER);
         owner.setRoles(roles);
         ownerRepository.save(owner);
-        logger.info("Метод createOwner от OwnerServiceImp. Пользователь с логином: {} успешно создан", owner.getEmail());
+        logger.info("Метод createOwner от OwnerServiceImp. Пользователь с логином: {} успешно создан", owner.getUsername());
         return owner;
     }
 
@@ -107,7 +107,7 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
     public Owner updateOwner(long id, String name, String email, String password, String city) throws OwnerNotFoundException {
         Owner owner = ownerFromOptional(id);
         owner.setName(name);
-        owner.setEmail(email);
+        owner.setUsername(email);
         owner.setPassword(passwordEncoder.encode(password));
         owner.setCity(city);
         return owner;
@@ -159,7 +159,7 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
 
         logger.info("Ищем пользователя с email: {}", username);
 
-        return ownerRepository.findByEmail(username)
+        return ownerRepository.findByUsername(username)
                 .orElseThrow(() -> {
                     logger.warn("Пользователь с email {} не найден", username);
                     return new UsernameNotFoundException("Пользователь с email " + username + " не найден");
@@ -183,7 +183,7 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
             username = principal.toString();
         }
 
-        Owner owner = ownerRepository.findByEmail(username)
+        Owner owner = ownerRepository.findByUsername(username)
                 .orElseThrow(() -> new OwnerNotFoundException("Владелец с таким именем не найден"));
 
         logger.info("Пользователь успешно аутентифицирован, логин: {}", username);

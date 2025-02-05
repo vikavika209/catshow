@@ -7,6 +7,7 @@ import com.vikavika209.catshow.model.Breed;
 import com.vikavika209.catshow.model.Cat;
 import com.vikavika209.catshow.model.Owner;
 import com.vikavika209.catshow.model.Show;
+import com.vikavika209.catshow.service.AuthenticationService;
 import com.vikavika209.catshow.service.CatService;
 import com.vikavika209.catshow.service.OwnerService;
 import com.vikavika209.catshow.utils.JwtUtil;
@@ -26,13 +27,15 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/")
 public class OwnerController {
+    private final AuthenticationService authenticationService;
     private final OwnerService ownerService;
     private final CatService catService;
     private JwtUtil jwtUtil;
     private static final Logger logger = LoggerFactory.getLogger(OwnerController.class);
 
     @Autowired
-    public OwnerController(OwnerService ownerService, CatService catService, JwtUtil jwtUtil) {
+    public OwnerController(AuthenticationService authenticationService, OwnerService ownerService, CatService catService, JwtUtil jwtUtil) {
+        this.authenticationService = authenticationService;
         this.ownerService = ownerService;
         this.catService = catService;
         this.jwtUtil = jwtUtil;
@@ -56,8 +59,8 @@ public class OwnerController {
         }
 
         try {
-            ownerService.createOwner(owner.getName(), owner.getEmail(), owner.getPassword(), owner.getCity());
-            logger.info("Пользователь с email: {} успешно создан", owner.getEmail());
+            authenticationService.signUp(owner.getName(), owner.getUsername(), owner.getPassword(), owner.getCity());
+            logger.info("Пользователь с email: {} успешно создан", owner.getUsername());
             return "registration-success";
         } catch (Exception e) {
             logger.error("Ошибка при регистрации: ", e);

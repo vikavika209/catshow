@@ -16,9 +16,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
@@ -53,18 +50,24 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/enter", "/submit_login", "/registration", "/submit_registration").permitAll()
-                        .anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
+                        .requestMatchers("/enter", "/submit_login", "/registration", "/submit_registration").permitAll() // Разрешаем доступ к этим страницам без входа
+                        .anyRequest().authenticated()
+                )
                 .formLogin(form -> form
                         .loginPage("/enter")
                         .loginProcessingUrl("/submit_login")
                         .defaultSuccessUrl("/", true)
                         .failureUrl("/enter?error=true")
-                );
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/enter")
+                        .permitAll()
+                )
+                .authenticationProvider(authenticationProvider());
+
         return http.build();
     }
+
 }

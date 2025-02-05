@@ -30,7 +30,7 @@ public class Owner implements UserDetails {
     @NotBlank(message = "Пожалуйста, введите ваш email")
     @Email(message = "Неверный формат email")
     @Column(nullable = false, unique = true)
-    private String email;
+    private String username;
 
     @NotBlank(message = "Пожалуйста, введите пароль")
     @Size(min = 6, message = "Пароль должен содержать минимум 6 символов")
@@ -65,7 +65,7 @@ public class Owner implements UserDetails {
     }
 
     public Owner(String email, String password, String name, String city, Long balance, List<Cat> cats) {
-        this.email = email;
+        this.username = email;
         this.password = password;
         this.name = name;
         this.city = city;
@@ -74,14 +74,14 @@ public class Owner implements UserDetails {
     }
 
     public Owner(String email, String password, String name, String city) {
-        this.email = email;
+        this.username = email;
         this.password = password;
         this.name = name;
         this.city = city;
     }
 
     public Owner(String email, String password, Set<Role> roles) {
-        this.email = email;
+        this.username = email;
         this.password = password;
         this.roles = roles;
     }
@@ -90,7 +90,7 @@ public class Owner implements UserDetails {
     public String toString() {
         return "Owner{" +
                 "id=" + id +
-                ", email='" + email + '\'' +
+                ", email='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", city='" + city + '\'' +
@@ -107,7 +107,7 @@ public class Owner implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.username;
     }
 
     @Override

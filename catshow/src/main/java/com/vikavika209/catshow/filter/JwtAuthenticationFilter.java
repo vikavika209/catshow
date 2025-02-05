@@ -2,6 +2,7 @@ package com.vikavika209.catshow.filter;
 
 import com.vikavika209.catshow.model.Owner;
 import com.vikavika209.catshow.service.OwnerService;
+import com.vikavika209.catshow.service.OwnerServiceImp;
 import com.vikavika209.catshow.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +19,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 
 @Component
@@ -25,8 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String HEADER_NAME = "Authorization";
     private final JwtUtil jwtUtil;
-    private final OwnerService ownerService;
-
+    private final OwnerServiceImp ownerService;
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Override
     protected void doFilterInternal(
