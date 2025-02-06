@@ -1,5 +1,6 @@
 package com.vikavika209.catshow.service;
 
+import com.vikavika209.catshow.aspect.Loggable;
 import com.vikavika209.catshow.exception.CatNotFoundException;
 import com.vikavika209.catshow.exception.OwnerNotFoundException;
 import com.vikavika209.catshow.exception.ShowNotFoundException;
@@ -19,6 +20,7 @@ import java.util.Set;
 
 
 @Service
+@Loggable
 public class CatServiceImp implements CatService{
 
     CatRepository catRepository;

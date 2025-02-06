@@ -1,5 +1,6 @@
 package com.vikavika209.catshow.service;
 
+import com.vikavika209.catshow.aspect.Loggable;
 import com.vikavika209.catshow.exception.CatNotFoundException;
 import com.vikavika209.catshow.exception.OwnerNotFoundException;
 import com.vikavika209.catshow.exception.ShowNotFoundException;
@@ -17,6 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Loggable
 public class ShowServiceImp implements ShowService{
 
     private final FromOptional fromOptional;

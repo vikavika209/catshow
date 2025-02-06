@@ -1,5 +1,6 @@
 package com.vikavika209.catshow.service;
 
+import com.vikavika209.catshow.aspect.Loggable;
 import com.vikavika209.catshow.controller.OwnerController;
 import com.vikavika209.catshow.exception.CatNotFoundException;
 import com.vikavika209.catshow.exception.EmailAlreadyExistsException;
@@ -32,6 +33,7 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 
 @Service
+@Loggable
 public class OwnerServiceImp implements OwnerService, UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
