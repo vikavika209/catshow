@@ -3,6 +3,7 @@ package com.vikavika209.catshow;
 import com.vikavika209.catshow.exception.OwnerNotFoundException;
 import com.vikavika209.catshow.model.Cat;
 import com.vikavika209.catshow.model.Owner;
+import com.vikavika209.catshow.model.Role;
 import com.vikavika209.catshow.model.Show;
 import com.vikavika209.catshow.repository.CatRepository;
 import com.vikavika209.catshow.repository.OwnerRepository;
@@ -56,6 +57,7 @@ public class CatShowApplication {
 			Show show1 = showService.createShow("Москва", date, "гл. Проспект, 23");
 			Show show2 = showService.createShow("Екатеринбург", date, "гл. Проспект, 23");
 			Owner ivan = ownerService.createOwner("Иван", "ivanov@test.com", "123456", "Москва");
+			ownerService.setOwnerRole(ivan.getId(), Role.ADMIN);
 			Owner petr = ownerService.createOwner("Петр", "petr@test.com", "123456", "Екатеринбург");
 			Cat cat1 = catService.createCat("Барсик", SPHYNX, ivan.getId());
 			Cat cat2 = catService.createCat("Чёрт", MAINECOON, petr.getId());

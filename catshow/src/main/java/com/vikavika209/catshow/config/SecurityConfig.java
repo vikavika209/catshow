@@ -49,15 +49,15 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/registration", "/submit_registration").permitAll()
+                        .requestMatchers("/enter", "/submit_registration", "/swagger-ui/**","/v3/api-docs/**","/swagger-ui/index.html", "/webjars/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/enter", "/submit_login", "/registration", "/submit_registration").permitAll() // Разрешаем доступ к этим страницам без входа
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/enter")
                         .loginProcessingUrl("/submit_login")
                         .defaultSuccessUrl("/", true)
-                        .failureUrl("/enter?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout

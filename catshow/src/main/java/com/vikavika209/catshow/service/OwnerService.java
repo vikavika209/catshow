@@ -5,6 +5,7 @@ import com.vikavika209.catshow.exception.OwnerNotFoundException;
 import com.vikavika209.catshow.exception.ShowNotFoundException;
 import com.vikavika209.catshow.model.Cat;
 import com.vikavika209.catshow.model.Owner;
+import com.vikavika209.catshow.model.Role;
 import com.vikavika209.catshow.model.Show;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -24,4 +25,5 @@ public interface OwnerService {
     void deleteAll();
     UserDetails loadUserByUsername(String username);
     Owner getCurrentOwner() throws OwnerNotFoundException;
+    Owner setOwnerRole(long id, Role role) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException;
 }

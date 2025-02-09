@@ -192,4 +192,11 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
 
         return owner;
     }
+
+    @Override
+    public Owner setOwnerRole(long id, Role role) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException {
+        var owner = fromOptional.objectFromOptional(Owner.class, id);
+        owner.getRoles().add(role);
+        return owner;
+    }
 }

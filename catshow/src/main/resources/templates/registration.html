@@ -114,9 +114,9 @@
 
 <div class="form-container">
     <form action="/submit_registration" method="POST" th:object="${owner}">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required  placeholder="Введите ваш email" th:field="*{email}">
-        <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        <label for="username">Email:</label>
+        <input type="email" id="username" name="username" required  placeholder="Введите ваш email" th:field="*{username}">
+        <div class="error-message" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
 
         <label for="password">Пароль:</label>
         <input type="password" id="password" name="password" required placeholder="Введите пароль" th:field="*{password}">

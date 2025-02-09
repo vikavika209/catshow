@@ -17,7 +17,7 @@ public class UnitTest {
     public void createNewOwnerTest(){
         Owner owner = new Owner("test@test.com", "123456", "Test Name", "Test City");
 
-        Assertions.assertEquals("test@test.com", owner.getEmail());
+        Assertions.assertEquals("test@test.com", owner.getUsername());
         Assertions.assertEquals("123456", owner.getPassword());
         Assertions.assertEquals("Test Name", owner.getName());
         Assertions.assertEquals("Test City", owner.getCity());
