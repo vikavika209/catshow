@@ -1,5 +1,7 @@
 package com.vikavika209.catshow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,11 +27,13 @@ public class Owner implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("id")
     private long id;
 
     @NotBlank(message = "Пожалуйста, введите ваш email")
     @Email(message = "Неверный формат email")
     @Column(nullable = false, unique = true)
+    @JsonProperty("username")
     private String username;
 
     @NotBlank(message = "Пожалуйста, введите пароль")
@@ -49,12 +53,14 @@ public class Owner implements UserDetails {
     private Long balance;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Cat> cats;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "owner_roles", joinColumns = @JoinColumn(name = "owner_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
+    @JsonProperty("roles")
     private Set<Role> roles = new HashSet<>();
 
     @PrePersist

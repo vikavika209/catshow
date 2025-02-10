@@ -57,7 +57,6 @@ public class CatShowApplication {
 			Show show1 = showService.createShow("Москва", date, "гл. Проспект, 23");
 			Show show2 = showService.createShow("Екатеринбург", date, "гл. Проспект, 23");
 			Owner ivan = ownerService.createOwner("Иван", "ivanov@test.com", "123456", "Москва");
-			ownerService.setOwnerRole(ivan.getId(), Role.ADMIN);
 			Owner petr = ownerService.createOwner("Петр", "petr@test.com", "123456", "Екатеринбург");
 			Cat cat1 = catService.createCat("Барсик", SPHYNX, ivan.getId());
 			Cat cat2 = catService.createCat("Чёрт", MAINECOON, petr.getId());
@@ -68,7 +67,9 @@ public class CatShowApplication {
 			showService.addParticipant(cat1.getId(), show2.getId());
 			showService.addParticipant(cat2.getId(), show2.getId());
 
-			catService.allCats().forEach(cat -> System.out.println(cat.getId()));
+			Owner ivanAsAdmin = ownerService.setOwnerRole(ivan.getId(), Role.ADMIN);
+			System.out.println(ivanAsAdmin.getUsername());
+			System.out.println(ivanAsAdmin.getRoles());
 		};
 	}
 }
