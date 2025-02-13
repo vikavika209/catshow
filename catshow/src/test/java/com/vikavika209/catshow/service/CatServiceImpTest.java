@@ -8,8 +8,6 @@ import com.vikavika209.catshow.model.Cat;
 import com.vikavika209.catshow.model.Owner;
 import com.vikavika209.catshow.model.Show;
 import com.vikavika209.catshow.repository.CatRepository;
-import com.vikavika209.catshow.repository.OwnerRepository;
-import com.vikavika209.catshow.repository.ShowRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
