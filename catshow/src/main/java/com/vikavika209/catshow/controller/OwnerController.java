@@ -10,80 +10,73 @@ import com.vikavika209.catshow.model.Show;
 import com.vikavika209.catshow.service.AuthenticationService;
 import com.vikavika209.catshow.service.CatService;
 import com.vikavika209.catshow.service.OwnerService;
-import com.vikavika209.catshow.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/")
 public class OwnerController {
     private final AuthenticationService authenticationService;
     private final OwnerService ownerService;
     private final CatService catService;
-    private JwtUtil jwtUtil;
     private static final Logger logger = LoggerFactory.getLogger(OwnerController.class);
 
     @Autowired
-    public OwnerController(AuthenticationService authenticationService, OwnerService ownerService, CatService catService, JwtUtil jwtUtil) {
+    public OwnerController(AuthenticationService authenticationService, OwnerService ownerService, CatService catService) {
         this.authenticationService = authenticationService;
         this.ownerService = ownerService;
         this.catService = catService;
-        this.jwtUtil = jwtUtil;
+    }
+
+    private Owner getCurrentOwner() throws OwnerNotFoundException {
+        return ownerService.getCurrentOwner();
     }
 
     @GetMapping("/registration")
-    public String registration(Model model) {
+    public String getRegistrationPage(Model model) {
         model.addAttribute("owner", new Owner());
         return "registration";
     }
 
     @PostMapping("/submit_registration")
-    public String registerOwner(
+    public String registrationNewOwner(
             @ModelAttribute("owner") @Valid Owner owner,
-            BindingResult result,
-            Model model
+            BindingResult result
     ) {
         if (result.hasErrors()) {
-            logger.info("Ошибка при регистрации пользователя в OwnerController классе");
+            logger.warn("Ошибка при регистрации пользователя в OwnerController классе");
             return "registration";
         }
-
-        try {
             authenticationService.signUp(owner.getName(), owner.getUsername(), owner.getPassword(), owner.getCity());
-            logger.info("Пользователь с email: {} успешно создан", owner.getUsername());
-            return "registration-success";
-        } catch (Exception e) {
-            logger.error("Ошибка при регистрации: ", e);
-            model.addAttribute("error", "Ошибка при регистрации: " + e.getMessage());
-            return "registration";
+
+        return "registration-success";
         }
-    }
 
     @GetMapping("/my_show")
     public String getOwnerShows(Model model) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException {
-        Owner owner = ownerService.getCurrentOwner();
+        Owner owner = getCurrentOwner();
         Set<Show> shows = ownerService.getAllShowsByOwnerId(owner.getId());
         model.addAttribute("shows", shows);
         return "my_show";
     }
 
     @GetMapping("/profile")
-    public String profile(Model model) throws OwnerNotFoundException, ShowNotFoundException, CatNotFoundException {
-        Owner owner = ownerService.getCurrentOwner();
+    public String getProfile(Model model) throws OwnerNotFoundException, ShowNotFoundException, CatNotFoundException {
+        Owner owner = getCurrentOwner();
 
-        String catNames = owner.getCats() != null
-                ? ownerService.getCatsOfTheOwnerById(owner.getId()).stream().map(Cat::getName).collect(Collectors.joining(", "))
-                : "No cat has been found";
+        String catNames = CollectionUtils.isEmpty(owner.getCats())
+                ? "No cat has been found"
+                : ownerService.getCatsOfTheOwnerById(owner.getId()).stream()
+                .map(Cat::getName)
+                .collect(Collectors.joining(", "));
 
         model.addAttribute("owner", owner);
         model.addAttribute("catNames", catNames);
@@ -93,7 +86,7 @@ public class OwnerController {
 
     @GetMapping("/my_pets")
     public String getCatsByOwnerId(Model model) throws CatNotFoundException, OwnerNotFoundException {
-        Owner owner = ownerService.getCurrentOwner();
+        Owner owner = getCurrentOwner();
         Set<Cat> cats = ownerService.getCatsOfTheOwnerById(owner.getId());
 
         model.addAttribute("cats", cats);
@@ -103,18 +96,19 @@ public class OwnerController {
 
     @GetMapping ("/new_cat")
     public String addCatToTheOwner(Model model) throws OwnerNotFoundException {
-        Owner owner = ownerService.getCurrentOwner();
+        Owner owner = getCurrentOwner();
         model.addAttribute("currentOwner", owner);
         model.addAttribute("cat", new Cat());
         return "new_cat";
     }
 
     @PostMapping("/addCat")
-    public String addCat(@RequestParam("name") String name,
-                         @RequestParam("breed") Breed breed,
-                         @RequestParam("ownerId") long ownerId) throws OwnerNotFoundException {
+    public String addCatToTheCurrentOwner(@RequestParam("name") String name,
+                         @RequestParam("breed") Breed breed) throws OwnerNotFoundException {
 
-        catService.createCat(name, breed, ownerId);
+        Owner owner = getCurrentOwner();
+        catService.createCat(name, breed, owner.getId());
+
         return "redirect:/my_pets";
     }
 }
