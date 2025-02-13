@@ -106,8 +106,8 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
 
     @Transactional
     @Override
-    public Owner updateOwner(long id, String name, String email, String password, String city) throws OwnerNotFoundException {
-        Owner owner = ownerFromOptional(id);
+    public Owner updateOwner(long id, String name, String email, String password, String city) throws OwnerNotFoundException, ShowNotFoundException, CatNotFoundException {
+        Owner owner = fromOptional.objectFromOptional(Owner.class, id);
         owner.setName(name);
         owner.setUsername(email);
         owner.setPassword(passwordEncoder.encode(password));
@@ -161,11 +161,13 @@ public class OwnerServiceImp implements OwnerService, UserDetailsService {
 
         logger.info("Ищем пользователя с email: {}", username);
 
-        return ownerRepository.findByUsername(username)
+       Owner owner = ownerRepository.findByUsername(username)
                 .orElseThrow(() -> {
                     logger.warn("Пользователь с email {} не найден", username);
                     return new UsernameNotFoundException("Пользователь с email " + username + " не найден");
                 });
+       owner.setPassword(null);
+        return owner;
     }
 
     @Override

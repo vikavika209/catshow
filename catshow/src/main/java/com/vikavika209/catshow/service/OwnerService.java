@@ -20,7 +20,7 @@ public interface OwnerService {
     List<Owner> getAllOwners ();
     Set<Cat> getCatsOfTheOwnerById(long ownerId) throws OwnerNotFoundException;
     Set<Show> getAllShowsByOwnerId(long id) throws ShowNotFoundException, CatNotFoundException, OwnerNotFoundException;
-    Owner updateOwner(long id, String name, String email, String password, String city) throws OwnerNotFoundException;
+    Owner updateOwner(long id, String name, String email, String password, String city) throws OwnerNotFoundException, ShowNotFoundException, CatNotFoundException;
     void deleteOwner(long id);
     void deleteAll();
     UserDetails loadUserByUsername(String username);
